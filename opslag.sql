@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 20 mei 2026 om 14:35
+-- Gegenereerd op: 20 mei 2026 om 15:45
 -- Serverversie: 10.4.32-MariaDB
 -- PHP-versie: 8.2.12
 
@@ -30,18 +30,17 @@ SET time_zone = "+00:00";
 CREATE TABLE `gebruikers` (
   `id` mediumint(9) NOT NULL,
   `username` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL
+  `password` varchar(100) NOT NULL,
+  `is_admin` varchar(10) DEFAULT 'false'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `gebruikers`
 --
 
-INSERT INTO `gebruikers` (`id`, `username`, `password`) VALUES
-(1, 'test', 'test'),
-(5, 'Admin', 'Admin'),
-(6, 'annemarie', 'p33960'),
-(7, 'perez', 'perez');
+INSERT INTO `gebruikers` (`id`, `username`, `password`, `is_admin`) VALUES
+(1, 'test', 'test', 'false'),
+(5, 'Admin', 'Admin', 'true');
 
 -- --------------------------------------------------------
 
