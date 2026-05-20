@@ -10,8 +10,8 @@ $gebruikers = $stmt->fetchAll();
 
 
 foreach ($gebruikers as $gebruiker) {
-        if (isset($_COOKIE['username'])) {
-            if ($_COOKIE["username"] == $gebruiker['username'] && $_COOKIE["password"] == $gebruiker['password']) {
+        if (isset($__SESSION['username'])) {
+            if ($__SESSION["username"] == $gebruiker['username'] && $__SESSION["password"] == $gebruiker['password']) {
                 header("Location: index.php");
                 exit;
             }
@@ -58,14 +58,14 @@ if (isset($_POST['button'])) {
     foreach ($gebruikers as $gebruiker) {
         if ($username == $gebruiker['username'] && $password == $gebruiker['password']) {
             $logged_in = true;
-            setcookie("username", $username, time() + 604800);
-            setcookie("password", $password, time() + 604800);
+            $_SESSION["username"] = $username;
+            $_SESSION["password"] = $password;
             header("Location: index.php");
             exit;
         }
     }
     if (!isset($logged_in)) {
-        setcookie("msg_wrong", "true", time() + 1);
+        setcookie("msg_wrong", true, time() + 1);
         header("Location: login.php");
     }
 }
