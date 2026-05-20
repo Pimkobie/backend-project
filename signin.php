@@ -10,8 +10,8 @@ $gebruikers = $stmt->fetchAll();
 
 
 foreach ($gebruikers as $gebruiker) {
-    if (isset($_COOKIE['username'])) {
-            if ($_COOKIE["username"] == $gebruiker['username'] && $_COOKIE["password"] == $gebruiker['password']) {
+    if (isset($__SESSION['username'])) {
+            if ($__SESSION["username"] == $gebruiker['username'] && $__SESSION["password"] == $gebruiker['password']) {
                 header("Location: index.php");
                 exit;
             }
@@ -59,7 +59,7 @@ if (isset($_POST['button'])) {
     foreach ($gebruikers as $gebruiker) {
         if ($username == $gebruiker['username']) {
             $username_exist = true;
-            setcookie("msg_wrong", "true", time() + 1);
+            setcookie("msg_wrong", true, time() + 1);
             header("Location: signin.php");
             exit;
         }
@@ -69,10 +69,10 @@ if (isset($_POST['button'])) {
             if ($password != "") {
                 $pdo = new PDO("mysql:host=localhost;dbname=opslag", "bit_academy", "bit_academy");
 
-                $pdo->exec("INSERT INTO gebruikers (username, password, is_admin) VALUES ('$username', '$password', 'false')");
+                $pdo->exec("INSERT INTO gebruikers (username, password, is_admin) VALUES ('$username', '$password', false)");
 
-                setcookie("username", $username, time() + 604800);
-                setcookie("password", $password, time() + 604800);
+                $_SESSION['username'] = $username;
+                $_SESSION['password'] = $password;
                 header("Location: index.php");
             }        
         }
