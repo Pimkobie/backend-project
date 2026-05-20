@@ -2,11 +2,8 @@
 
 session_start();
 
-$pdo = new PDO(
-    'mysql:host=localhost;port:33060;dbname=opslag',
-    'bit_academy',
-    'bit_academy'
-);
+include 'database.php';
+
 $pdo->exec("USE opslag");
 $stmt = $pdo->query("SELECT * FROM gebruikers");
 $gebruikers = $stmt->fetchAll();
@@ -72,7 +69,7 @@ if (isset($_POST['button'])) {
             if ($password != "") {
                 $pdo = new PDO("mysql:host=localhost;dbname=opslag", "bit_academy", "bit_academy");
 
-                $pdo->exec("INSERT INTO gebruikers (username, password) VALUES ('$username', '$password')");
+                $pdo->exec("INSERT INTO gebruikers (username, password, is_admin) VALUES ('$username', '$password', 'false')");
 
                 setcookie("username", $username, time() + 604800);
                 setcookie("password", $password, time() + 604800);
