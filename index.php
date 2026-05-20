@@ -1,10 +1,6 @@
 <?php
 
-$pdo = new PDO(
-    'mysql:host=localhost;port:33060;dbname=opslag',
-    'bit_academy',
-    'bit_academy'
-);
+include 'database.php';
 
 $pdo->exec("USE opslag");
 $stmt = $pdo->query("SELECT * FROM tickets");
@@ -26,9 +22,9 @@ $gebruikers = $stmt->fetchAll();
 foreach ($gebruikers as $gebruiker) {
     if ($_COOKIE["username"] == $gebruiker['username'] && $_COOKIE["password"] == $gebruiker['password']) {
         $logged_in = true;
-    }
-    if ($gebruiker['username'] == "Admin" && $gebruiker['password'] == $_COOKIE['password']) {
-        $admin = true;
+        if ($gebruiker['is_admin'] == 'true') {
+            $admin = true;
+        }
     }
 }
 if (!isset($logged_in)) {
@@ -37,6 +33,7 @@ if (!isset($logged_in)) {
     header("Location: front.php");
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -79,6 +76,16 @@ if (!isset($logged_in)) {
         <?= $ticket_number ?>
         <h3>Your Tickets: </h3>
         <?= $your_ticket_number ?>
+        <br><br><br><br>
+        <form method="POST">
+            <?php
+            if (isset($admin)) {
+                if ($admin == true) {
+                    echo "<button class='userbutton' name='users'>Users</button>";
+                }
+            }
+            ?>
+        </form>
     </div>
 </body>
 <footer>
@@ -103,6 +110,12 @@ if (isset($_POST['manage'])) {
     } else {
         setcookie("wrong_way", true, time() + 1);
         header("Location: index.php");
+    }
+}
+
+if (isset($_POST['users'])) {
+    if (isset($admin)) {
+        header("Location: users.php");
     }
 }
 ?>
