@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include 'database.php';
 
 $pdo->exec("USE opslag");
@@ -7,13 +9,13 @@ $stmt = $pdo->query("SELECT * FROM gebruikers");
 $gebruikers = $stmt->fetchAll();
 
 foreach ($gebruikers as $gebruiker) {
-    if ($_COOKIE["username"] == $gebruiker['username'] && $_COOKIE["password"] == $gebruiker['password']) {
+    if ($_SESSION["username"] == $gebruiker['username'] && $_SESSION["password"] == $gebruiker['password']) {
         $logged_in = true;
     }
 }
 if (!isset($logged_in)) {
-    setcookie("username", "", time() - 1);
-    setcookie("password", "", time() - 1);
+    unset($_SESSION["username"]);
+    unset($_SESSION["password"]);
     header("Location: front.php");
 }
 ?>
@@ -29,7 +31,7 @@ if (!isset($logged_in)) {
     <table class="head">
         <tr>
             <form method="POST">
-                <td><?= $_COOKIE['username'] ?></td>
+                <td><?= $_SESSION['username'] ?></td>
                 <td><button class="back" name="back">Go Back</button></td>
             </form>
         </tr>
@@ -70,11 +72,11 @@ if (isset($_POST['back'])) {
 
 if (isset($_POST['post'])) {
 
-    $username = $_COOKIE['username'];
+    $username = $_SESSION['username'];
     $title = $_POST['title'];
     $description = $_POST['description'];
 
-    if (isset($_COOKIE['username'])) {
+    if (isset($_SESSION['username'])) {
         if ($title != "") {
             if ($description != "") {
                 $pdo = new PDO("mysql:host=localhost;dbname=opslag", "bit_academy", "bit_academy");
@@ -84,11 +86,11 @@ if (isset($_POST['post'])) {
                 header("location: index.php");
                 exit;
             } else {
-                setcookie("msg_wrong", "true", time() + 1);
+                setcookie("msg_wrong", true, time() + 1);
                 header("Location: createticket.php");
             }
         } else {
-            setcookie("msg_wrong", "true", time() + 1);
+            setcookie("msg_wrong", true, time() + 1);
             header("Location: createticket.php");
         }
     } else {
