@@ -1,5 +1,7 @@
 <?php
 
+session_start();    
+
 include 'database.php';
 
 $pdo->exec("USE opslag");
@@ -10,7 +12,7 @@ $your_ticket_number = 0;
 
 foreach ($tickets as $ticket) {
     $ticket_number++;
-    if ($ticket['username'] == $_COOKIE['username']) {
+    if ($ticket['username'] == $_SESSION['username']) {
         $your_ticket_number = $your_ticket_number + 1;
     }
 }
@@ -20,16 +22,16 @@ $stmt = $pdo->query("SELECT * FROM gebruikers");
 $gebruikers = $stmt->fetchAll();
 
 foreach ($gebruikers as $gebruiker) {
-    if ($_COOKIE["username"] == $gebruiker['username'] && $_COOKIE["password"] == $gebruiker['password']) {
+    if ($_SESSION["username"] == $gebruiker['username'] && $_SESSION["password"] == $gebruiker['password']) {
         $logged_in = true;
-        if ($gebruiker['is_admin'] == 'true') {
+        if ($gebruiker['is_admin'] == true) {
             $admin = true;
         }
     }
 }
 if (!isset($logged_in)) {
-    setcookie("username", "", time() - 1);
-    setcookie("password", "", time() - 1);
+    unset($_SESSION["username"]);
+    unset($_SESSION["password"]);
     header("Location: front.php");
 }
 ?>
@@ -46,7 +48,7 @@ if (!isset($logged_in)) {
     <table class="head">
         <tr>
             <form method="POST">
-                <td><?= $_COOKIE['username'] ?></td>
+                <td><?= $_SESSION['username'] ?></td>
                 <td><button class="logout" name="logout">Logout</button></td>
             </form>
         </tr>
@@ -95,8 +97,8 @@ if (!isset($logged_in)) {
 </html>
 <?php
 if (isset($_POST['logout'])) {
-    setcookie("username", "", time() - 1);
-    setcookie("password", "", time() - 1);
+    unset($_SESSION["username"]);
+    unset($_SESSION["password"]);
     header("Location: front.php");
 }
 
