@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include 'database.php';
 
 $pdo->exec("USE opslag");
@@ -7,7 +9,7 @@ $stmt = $pdo->query("SELECT * FROM gebruikers");
 $gebruikers = $stmt->fetchAll();
 
 foreach ($gebruikers as $gebruiker) {
-    if ($_COOKIE["username"] == "Admin" && $_COOKIE["password"] == $gebruiker['password']) {
+    if ($_SESSION["username"] == "Admin" && $_SESSION["password"] == $gebruiker['password']) {
         $logged_in = true;
     }
 }
@@ -27,7 +29,7 @@ if (!isset($logged_in)) {
     <table class="head">
         <tr>
             <form method="POST">
-                <td><?= $_COOKIE['username'] ?></td>
+                <td><?= $_SESSION['username'] ?></td>
                 <td><button class="back" name="back">Go Back</button></td>
             </form> 
         </tr>
