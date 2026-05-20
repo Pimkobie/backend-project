@@ -13,12 +13,13 @@ $gebruikers = $stmt->fetchAll();
 
 
 foreach ($gebruikers as $gebruiker) {
-        if ($_COOKIE["username"] == $gebruiker['username'] && $_COOKIE["password"] == $gebruiker['password']) {
-            header("Location: index.php");
-            exit;
+    if (isset($_COOKIE['username'])) {
+            if ($_COOKIE["username"] == $gebruiker['username'] && $_COOKIE["password"] == $gebruiker['password']) {
+                header("Location: index.php");
+                exit;
+            }
         }
     }
-
 
 ?>
 <!DOCTYPE html>
