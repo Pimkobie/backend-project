@@ -231,3 +231,14 @@ h1 {
     cursor: pointer;
     margin-top: 20px;
 }
+
+.userbutton {
+    background-color: rgba(0, 0, 0, 0.82);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: 40px;
+}
