@@ -2,11 +2,8 @@
 
 session_start();
 
-$pdo = new PDO(
-    'mysql:host=localhost;port:33060;dbname=opslag',
-    'bit_academy',
-    'bit_academy'
-);
+include 'database.php';
+
 $pdo->exec("USE opslag");
 $stmt = $pdo->query("SELECT * FROM gebruikers");
 $gebruikers = $stmt->fetchAll();
@@ -71,6 +68,4 @@ if (isset($_POST['button'])) {
         setcookie("msg_wrong", "true", time() + 1);
         header("Location: login.php");
     }
-}
-
 }
