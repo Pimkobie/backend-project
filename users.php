@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 include 'database.php';
 
 $pdo->exec("USE opslag");
@@ -7,9 +9,9 @@ $stmt = $pdo->query("SELECT * FROM gebruikers");
 $gebruikers = $stmt->fetchAll();
 
 foreach ($gebruikers as $gebruiker) {
-    if ($_COOKIE["username"] == $gebruiker['username'] && $_COOKIE["password"] == $gebruiker['password']) {
+    if ($_SESSION["username"] == $gebruiker['username'] && $_SESSION["password"] == $gebruiker['password']) {
         $logged_in = true;
-        if ($gebruiker['is_admin'] == 'true') {
+        if ($gebruiker['is_admin'] == true) {
             $admin = true;
         }
     }
@@ -30,7 +32,7 @@ if (!isset($admin)) {
     <table class="head">
         <tr>
             <form method="POST">
-                <td><?= $_COOKIE['username'] ?></td>
+                <td><?= $_SESSION['username'] ?></td>
                 <td><button class="back" name="back">Go Back</button></td>
             </form>
         </tr>
@@ -51,9 +53,15 @@ if (!isset($admin)) {
             $tickets = $stmt->fetchAll();
 
             foreach ($gebruikers as $gebruiker) {
+                if ($gebruiker['is_admin'] == true) {
+                    $is_admin = "true";
+                } else {
+                    $is_admin = "false";
+                }
+
                 echo "<tr>";
                 echo "<td class='c1'>" . $gebruiker['username'] . "</td>";
-                echo "<td class='c2'>" . $gebruiker['is_admin'] . "</td>";
+                echo "<td class='c2'>" . $is_admin . "</td>";
                 echo "<td><button class='Inspect' name='admin' value='" . $gebruiker['username'] . "'>Change</button></td>";
                 echo "</tr>";
             }
@@ -82,11 +90,11 @@ if (isset($_POST['admin'])) {
 
 
 
-    if ($user['is_admin'] == "true") {
-        $stmt = $pdo->prepare("UPDATE gebruikers SET is_admin = 'false' WHERE username = ?");
+    if ($user['is_admin'] == true) {
+        $stmt = $pdo->prepare("UPDATE gebruikers SET is_admin = false WHERE username = ?");
         $stmt->execute([$u]);
-    } else if ($user['is_admin'] == "false") {
-        $stmt = $pdo->prepare("UPDATE gebruikers SET is_admin = 'true' WHERE username = ?");
+    } else if ($user['is_admin'] == false) {
+        $stmt = $pdo->prepare("UPDATE gebruikers SET is_admin = true WHERE username = ?");
         $stmt->execute([$u]);
     }
 
